@@ -29,6 +29,9 @@ public class Evaluation {
     @Convert(converter = JsonNodeConverter.class)  // custom converter data type
     private JsonNode jsonData;
 
+    // Note entity isn't necessary
+    private String note;
+
     // many to one, we need that 'ONE' instance
     @ManyToOne
     private EvaluationType evaluationType;
@@ -36,19 +39,18 @@ public class Evaluation {
     @ManyToOne
     private Patient patient;
 
-    @ManyToOne
-    private Note note;
-
-    public Evaluation(Long id, LocalDateTime date, double duration, JsonNode jsonData) {
+    public Evaluation(Long id, LocalDateTime date, double duration, JsonNode jsonData, String note) {
         this.id = id;
         this.date = date;
         this.duration = duration;
         this.jsonData = jsonData;
+        this.note = note;
     }
 
     public Evaluation() {}
 
     public Evaluation(Evaluation evaluation){
-        this(evaluation.getId(), evaluation.getDate(), evaluation.getDuration(), evaluation.getJsonData());
+        this(evaluation.getId(), evaluation.getDate(), evaluation.getDuration(), evaluation.getJsonData(),
+                evaluation.getNote());
     }
 }
