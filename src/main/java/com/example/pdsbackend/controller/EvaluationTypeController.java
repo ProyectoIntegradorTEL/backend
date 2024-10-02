@@ -3,18 +3,23 @@ package com.example.pdsbackend.controller;
 import com.example.pdsbackend.DTO.EvaluationTypeDTO;
 import com.example.pdsbackend.model.EvaluationType;
 import com.example.pdsbackend.service.IEvaluationTypeService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+// DESCOMENTAR import org.springframework.security.access.prepost.PreAuthorize;
+// DESCOMENTAR import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/evaluation-types")  // Cambia esta ruta según tus necesidades
+@Controller
+@CrossOrigin
+@RequestMapping("/evaluation-types")
 public class EvaluationTypeController {
-
     private final IEvaluationTypeService evaluationTypeService;
 
     @Autowired
@@ -24,6 +29,7 @@ public class EvaluationTypeController {
 
     @PostMapping
     public ResponseEntity<EvaluationType> createEvaluationType(@RequestBody EvaluationTypeDTO evaluationTypeDTO) {
+        System.out.println("entra a crear EVALUATION TYPE");
         EvaluationType createdEvaluationType = evaluationTypeService.createEvaluationType(evaluationTypeDTO);
         return new ResponseEntity<>(createdEvaluationType, HttpStatus.CREATED);
     }

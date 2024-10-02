@@ -6,7 +6,7 @@ import com.example.pdsbackend.repository.IUserRepository;
 import com.example.pdsbackend.service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+// DESCOMENTAR import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,9 +18,12 @@ public class UserServiceImpl implements IUserService {
 
     IUserRepository userRepository;
 
+    /* DESCOMENTAR
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+    /*
+
+     */
     @Autowired
     public UserServiceImpl(IUserRepository authorRepository) {
         this.userRepository = authorRepository;
@@ -30,7 +33,7 @@ public class UserServiceImpl implements IUserService {
     public User createUser(UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        //DESCOMENTAR user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setCreatedAt(LocalDateTime.now()); // creation date
 

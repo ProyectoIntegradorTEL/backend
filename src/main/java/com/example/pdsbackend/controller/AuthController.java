@@ -1,3 +1,4 @@
+/* DESCOMENTAR
 package com.example.pdsbackend.controller;
 
 import com.example.pdsbackend.DTO.UserDTO;
@@ -5,7 +6,7 @@ import com.example.pdsbackend.config.JwtTokenUtil;
 import com.example.pdsbackend.model.JwtRequest;
 import com.example.pdsbackend.model.JwtResponse;
 import com.example.pdsbackend.service.IUserService;
-import com.example.pdsbackend.service.JwtUserDetailsService;
+//DESCOMENTAR import com.example.pdsbackend.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -67,4 +67,4 @@ public class AuthController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-}
+}*/
