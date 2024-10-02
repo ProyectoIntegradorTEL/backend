@@ -1,4 +1,3 @@
-/* DESCOMENTAR
 package com.example.pdsbackend.controller;
 
 import com.example.pdsbackend.DTO.UserDTO;
@@ -7,6 +6,7 @@ import com.example.pdsbackend.model.JwtRequest;
 import com.example.pdsbackend.model.JwtResponse;
 import com.example.pdsbackend.service.IUserService;
 //DESCOMENTAR import com.example.pdsbackend.service.JwtUserDetailsService;
+import com.example.pdsbackend.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,8 +50,7 @@ public class AuthController {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
@@ -67,4 +66,4 @@ public class AuthController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-}*/
+}

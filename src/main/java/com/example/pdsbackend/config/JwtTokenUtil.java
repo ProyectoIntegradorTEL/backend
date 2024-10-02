@@ -1,4 +1,3 @@
-/* DESCOMENTAR
 package com.example.pdsbackend.config;
 
 import io.jsonwebtoken.Claims;
@@ -81,4 +80,4 @@ public class JwtTokenUtil implements Serializable {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-}*/
+}

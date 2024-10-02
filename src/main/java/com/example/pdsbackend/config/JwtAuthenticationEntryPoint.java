@@ -1,4 +1,3 @@
-/* DESCOMENTAR
 package com.example.pdsbackend.config;
 
 import java.io.IOException;
@@ -22,4 +21,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
 
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
-}*/
+}

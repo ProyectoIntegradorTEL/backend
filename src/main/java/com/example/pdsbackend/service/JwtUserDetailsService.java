@@ -1,4 +1,3 @@
-/* DESCOMENTAR
 package com.example.pdsbackend.service;
 
 import com.example.pdsbackend.model.User;
@@ -26,4 +25,4 @@ public class JwtUserDetailsService implements UserDetailsService {
         builder.roles("USER");  // add roles if necessary
         return builder.build();
     }
-}*/
+}

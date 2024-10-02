@@ -1,9 +1,8 @@
-/* DESCOMENTAR
 package com.example.pdsbackend.config;
 
 import java.io.IOException;
 
-// DESCOMENTAR import com.example.pdsbackend.service.JwtUserDetailsService;
+import com.example.pdsbackend.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -90,4 +89,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
-}*/
+}

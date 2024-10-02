@@ -1,4 +1,3 @@
-/* DESCOMENTAR
 package com.example.pdsbackend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class WebSecurityConfig {
         // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }*/
-    /*
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -65,10 +64,10 @@ public class WebSecurityConfig {
                 // store user's state.
                         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
-        /*httpSecurity
+        httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/evaluation-types", "/evaluation","/evaluation-types/**").permitAll()
+                        .requestMatchers("/auth/**", "/evaluation/sensor").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -85,4 +84,4 @@ public class WebSecurityConfig {
 
         return httpSecurity.build();
     }
-}*/
+}
