@@ -3,6 +3,7 @@ package com.example.pdsbackend.controller;
 import com.example.pdsbackend.DTO.EvaluationDTO;
 import com.example.pdsbackend.model.Evaluation;
 import com.example.pdsbackend.service.IEvaluationService;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Controller
@@ -27,6 +29,13 @@ public class EvaluationController {
     @PostMapping
     public ResponseEntity<Evaluation> createEvaluation(@RequestBody EvaluationDTO evaluationDTO) {
         Evaluation createdEvaluation = evaluationService.createEvaluation(evaluationDTO);
+        return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/sensor")
+    public ResponseEntity<Evaluation> createEvaluationFromSensor(@RequestBody String readings) {
+        System.out.println("Creating evaluation from sensor. Received: " + readings);
+        Evaluation createdEvaluation = evaluationService.createEvaluationFromSensor(readings);
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
     }
 

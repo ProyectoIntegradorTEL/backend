@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class EvaluationDTO implements Serializable {
     private LocalDateTime date;
     private double duration;
-    private JsonNode jsonData;
+    private String jsonData;
     private String note;
     private Long evaluationTypeId; // evaluation type ID
     private Long patientId; // patient ID

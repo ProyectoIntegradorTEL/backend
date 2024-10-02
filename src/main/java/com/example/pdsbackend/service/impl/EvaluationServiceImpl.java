@@ -8,11 +8,15 @@ import com.example.pdsbackend.repository.IEvaluationRepository;
 import com.example.pdsbackend.repository.IEvaluationTypeRepository;
 import com.example.pdsbackend.repository.IPatientRepository;
 import com.example.pdsbackend.service.IEvaluationService;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,6 +33,17 @@ public class EvaluationServiceImpl implements IEvaluationService {
         this.evaluationRepository = evaluationRepository;
         this.evaluationTypeRepository = evaluationTypeRepository;
         this.patientRepository = patientRepository;
+    }
+
+    @Override
+    public Evaluation createEvaluationFromSensor(String readings) {
+        Evaluation evaluation = new Evaluation();
+        evaluation.setDate(LocalDateTime.now());
+        evaluation.setDuration(0);
+        evaluation.setJsonData(readings);
+        evaluation.setNote("No note");
+
+        return evaluationRepository.save(evaluation);
     }
 
     @Override
@@ -62,6 +77,8 @@ public class EvaluationServiceImpl implements IEvaluationService {
             evaluation.setNote(evaluationDTO.getNote());
 
             // Actualizar las entidades relacionadas
+            System.out.println("ID eva type" + evaluationDTO.getEvaluationTypeId());
+            System.out.println("ID patient" + evaluationDTO.getPatientId());
             EvaluationType evaluationType = evaluationTypeRepository.findById(evaluationDTO.getEvaluationTypeId())
                     .orElseThrow(() -> new EntityNotFoundException("EvaluationType not found."));
             evaluation.setEvaluationType(evaluationType);
