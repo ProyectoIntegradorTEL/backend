@@ -13,6 +13,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,26 @@ public class EvaluationServiceImpl implements IEvaluationService {
         evaluation.setNote("No note");
 
         return evaluationRepository.save(evaluation);
+    }
+
+    @Override
+    public byte[] generateCsv() throws IOException {
+        List<Evaluation> evaluations = evaluationRepository.findAll();
+
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.append("ID,Date,EvaluationType,Duration,Note,Patient,Readings\n"); // Reemplaza con los nombres de las columnas
+
+        for (Evaluation evaluation : evaluations) {
+            csvBuilder.append(evaluation.getId()).append(",")
+                    .append(evaluation.getDate()).append(",") // Reemplaza con los atributos reales
+                    .append(evaluation.getEvaluationType()).append(",")
+                    .append(evaluation.getDuration()).append(",")
+                    .append(evaluation.getNote()).append(",")
+                    .append(evaluation.getPatient()).append(",")
+                    .append(evaluation.getJsonData()).append("\n");
+        }
+
+        return csvBuilder.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
