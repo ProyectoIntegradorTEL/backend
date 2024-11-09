@@ -29,7 +29,6 @@ public class EvaluationTypeController {
 
     @PostMapping
     public ResponseEntity<EvaluationType> createEvaluationType(@RequestBody EvaluationTypeDTO evaluationTypeDTO) {
-        System.out.println("entra a crear EVALUATION TYPE");
         EvaluationType createdEvaluationType = evaluationTypeService.createEvaluationType(evaluationTypeDTO);
         return new ResponseEntity<>(createdEvaluationType, HttpStatus.CREATED);
     }

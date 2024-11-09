@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Map;
 
 @Entity(name = "Evaluation")
@@ -21,7 +21,7 @@ public class Evaluation {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private double duration;
@@ -30,7 +30,7 @@ public class Evaluation {
     @Convert(converter = JsonNodeConverter.class)  // custom converter data type
     private JsonNode jsonData;
     */
-
+    // CHART JS
     //@Column(name = "json_data", columnDefinition = "jsonb")
     //@Convert(converter = JsonStringConverter.class)
     @Column(nullable = false, length = 8000)
@@ -46,7 +46,7 @@ public class Evaluation {
     @ManyToOne
     private Patient patient;
 
-    public Evaluation(Long id, LocalDateTime date, double duration, String jsonData, String note) {
+    public Evaluation(Long id, LocalDate date, double duration, String jsonData, String note) {
         this.id = id;
         this.date = date;
         this.duration = duration;

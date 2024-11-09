@@ -3,8 +3,7 @@ package com.example.pdsbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity(name = "Patient")
 @Table(name = "PATIENT")
@@ -27,7 +26,7 @@ public class Patient {
     private String gender;
 
     @Column(nullable = false)
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(nullable = false)
     private String email;
@@ -35,7 +34,7 @@ public class Patient {
     @Column(nullable = false)
     private String phone;
 
-    public Patient(Long id, String personalId, String firstName, String lastName, String gender, LocalDateTime birthDate,
+    public Patient(Long id, String personalId, String firstName, String lastName, String gender, LocalDate birthDate,
                    String email, String phone) {
         this.id = id;
         this.personalId = personalId;

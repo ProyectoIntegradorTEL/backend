@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,7 +40,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
     @Override
     public Evaluation createEvaluationFromSensor(String readings) {
         Evaluation evaluation = new Evaluation();
-        evaluation.setDate(LocalDateTime.now());
+        evaluation.setDate(LocalDate.now());
         evaluation.setDuration(0);
         evaluation.setJsonData(readings);
         evaluation.setNote("No note");
@@ -77,11 +77,13 @@ public class EvaluationServiceImpl implements IEvaluationService {
         evaluation.setNote(evaluationDTO.getNote());
 
         // Obtener y establecer las entidades relacionadas
+
         EvaluationType evaluationType = evaluationTypeRepository.findById(evaluationDTO.getEvaluationTypeId())
                 .orElseThrow(() -> new EntityNotFoundException("EvaluationType not found."));
         evaluation.setEvaluationType(evaluationType);
 
-        Patient patient = patientRepository.findById(evaluationDTO.getPatientId())
+        System.out.println("evaluation type id:" + evaluationDTO.getEvaluationTypeId());
+        Patient patient = patientRepository.getPatientByPersonalId(evaluationDTO.getPatientId().toString())
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found."));
         evaluation.setPatient(patient);
 
