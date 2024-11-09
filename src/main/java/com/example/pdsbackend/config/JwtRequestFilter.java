@@ -34,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         System.out.println("Request URI: " + path);
 
         // ignore paths without auth
-        if (path.startsWith("/auth") || path.startsWith("/evaluation-types")) {
+        if (path.startsWith("/auth")) {
             // Continúa la cadena de filtros sin validar el token JWT
             chain.doFilter(request, response);
             return;
