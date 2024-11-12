@@ -3,9 +3,11 @@ package com.example.pdsbackend.service.impl;
 import com.example.pdsbackend.DTO.EvaluationDTO;
 import com.example.pdsbackend.model.Evaluation;
 import com.example.pdsbackend.model.EvaluationType;
+import com.example.pdsbackend.model.Evaluator;
 import com.example.pdsbackend.model.Patient;
 import com.example.pdsbackend.repository.IEvaluationRepository;
 import com.example.pdsbackend.repository.IEvaluationTypeRepository;
+import com.example.pdsbackend.repository.IEvaluatorRepository;
 import com.example.pdsbackend.repository.IPatientRepository;
 import com.example.pdsbackend.service.IEvaluationService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,14 +29,18 @@ public class EvaluationServiceImpl implements IEvaluationService {
     private final IEvaluationRepository evaluationRepository;
     private final IEvaluationTypeRepository evaluationTypeRepository;
     private final IPatientRepository patientRepository;
+    private final IEvaluatorRepository evaluatorRepository;
+
 
     @Autowired
     public EvaluationServiceImpl(IEvaluationRepository evaluationRepository,
                                  IEvaluationTypeRepository evaluationTypeRepository,
-                                 IPatientRepository patientRepository) {
+                                 IPatientRepository patientRepository,
+                                 IEvaluatorRepository evaluatorRepository) {
         this.evaluationRepository = evaluationRepository;
         this.evaluationTypeRepository = evaluationTypeRepository;
         this.patientRepository = patientRepository;
+        this.evaluatorRepository = evaluatorRepository;
     }
 
     @Override
@@ -43,7 +49,6 @@ public class EvaluationServiceImpl implements IEvaluationService {
         evaluation.setDate(LocalDate.now());
         evaluation.setDuration(0);
         evaluation.setJsonData(readings);
-        evaluation.setNote("No note");
 
         return evaluationRepository.save(evaluation);
     }
@@ -60,7 +65,6 @@ public class EvaluationServiceImpl implements IEvaluationService {
                     .append(evaluation.getDate()).append(",") // Reemplaza con los atributos reales
                     .append(evaluation.getEvaluationType()).append(",")
                     .append(evaluation.getDuration()).append(",")
-                    .append(evaluation.getNote()).append(",")
                     .append(evaluation.getPatient()).append(",")
                     .append(evaluation.getJsonData()).append("\n");
         }
@@ -74,7 +78,6 @@ public class EvaluationServiceImpl implements IEvaluationService {
         evaluation.setDate(evaluationDTO.getDate());
         evaluation.setDuration(evaluationDTO.getDuration());
         evaluation.setJsonData(evaluationDTO.getJsonData());
-        evaluation.setNote(evaluationDTO.getNote());
 
         // Obtener y establecer las entidades relacionadas
 
@@ -87,6 +90,10 @@ public class EvaluationServiceImpl implements IEvaluationService {
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found."));
         evaluation.setPatient(patient);
 
+        Evaluator evaluator = evaluatorRepository.findEvaluatorByPersonalId(evaluationDTO.getEvaluatorId().toString())
+                .orElseThrow(() -> new EntityNotFoundException("Evaluator not found."));
+        evaluation.setEvaluator(evaluator);
+
         return evaluationRepository.save(evaluation);
     }
 
@@ -98,7 +105,6 @@ public class EvaluationServiceImpl implements IEvaluationService {
             evaluation.setDate(evaluationDTO.getDate());
             evaluation.setDuration(evaluationDTO.getDuration());
             evaluation.setJsonData(evaluationDTO.getJsonData());
-            evaluation.setNote(evaluationDTO.getNote());
 
             // Actualizar las entidades relacionadas
             System.out.println("ID eva type" + evaluationDTO.getEvaluationTypeId());
@@ -107,9 +113,13 @@ public class EvaluationServiceImpl implements IEvaluationService {
                     .orElseThrow(() -> new EntityNotFoundException("EvaluationType not found."));
             evaluation.setEvaluationType(evaluationType);
 
-            Patient patient = patientRepository.findById(evaluationDTO.getPatientId())
+            Patient patient = patientRepository.getPatientByPersonalId(evaluationDTO.getPatientId().toString())
                     .orElseThrow(() -> new EntityNotFoundException("Patient not found."));
             evaluation.setPatient(patient);
+
+            Evaluator evaluator = evaluatorRepository.findEvaluatorByPersonalId(evaluationDTO.getEvaluatorId().toString())
+                    .orElseThrow(() -> new EntityNotFoundException("Evaluator not found."));
+            evaluation.setEvaluator(evaluator);
 
             return evaluationRepository.save(evaluation);
         } else {

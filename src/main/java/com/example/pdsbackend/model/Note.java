@@ -17,6 +17,15 @@ public class Note {
     @Column(nullable = false)
     private String comment;
 
+    @ManyToOne
+    private Evaluator evaluator;
+
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    private Patient patient;
+
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    private Evaluation evaluation;
+
     public Note(Long id, String comment) {
         this.id = id;
         this.comment = comment;

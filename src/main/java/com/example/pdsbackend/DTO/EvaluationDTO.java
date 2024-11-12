@@ -16,7 +16,7 @@ public class EvaluationDTO implements Serializable {
     private LocalDate date;
     private double duration;
     private String jsonData;
-    private String note;
     private Long evaluationTypeId; // evaluation type ID
     private Long patientId; // patient ID
+    private Long evaluatorId;
 }
