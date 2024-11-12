@@ -6,6 +6,7 @@ import com.example.pdsbackend.service.IEvaluationService;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,4 +85,23 @@ public class EvaluationController {
         List<Evaluation> evaluations = evaluationService.listEvaluations();
         return new ResponseEntity<>(evaluations, HttpStatus.OK);
     }
+
+//    @GetMapping("/{id}/fft")
+//    public ResponseEntity<?> getEvaluationByFft(@PathVariable Long id) {
+//        HttpHeaders headers = new HttpHeaders();
+//        var evaluation = evaluationService.searchEvaluationById(id);
+//        if (evaluation.isPresent()) {
+//
+//            var readings = evaluation.get().getJsonData();
+//            headers.set("Content-Type", "application/json; UTF-8");
+//            HttpEntity<String> request = new HttpEntity<>(readings, headers);
+//            ResponseEntity<String> response = restTemplate.postForEntity("localhost:8000/fft", request, String.class);
+//            return ResponseEntity.status(200)
+//                    .header("Content-Type", "application/json; charset=UTF-8")
+//                    .body(response.getBody());
+//        } else {
+//            return ResponseEntity.status(404).body("Evaluation not found");
+//        }
+//    }
+
 }
