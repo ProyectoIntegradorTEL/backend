@@ -79,6 +79,13 @@ public class EvaluationController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping(params = "patientId")
+    public ResponseEntity<List<Evaluation>> searchEvaluationByPatientId(@RequestParam Long patientId) {
+        System.out.println("Searching evaluation by patient id: " + patientId);
+        List<Evaluation> evaluations = evaluationService.searchEvaluationByPatientId(patientId);
+        return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<Evaluation>> listEvaluations() {
         List<Evaluation> evaluations = evaluationService.listEvaluations();

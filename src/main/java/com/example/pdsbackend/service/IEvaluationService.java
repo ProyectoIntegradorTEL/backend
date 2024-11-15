@@ -12,10 +12,18 @@ import java.util.Optional;
 
 public interface IEvaluationService {
     public Evaluation createEvaluation(EvaluationDTO evaluationDTO);
+
     public void deleteEvaluation(Long id);
+
     public Optional<Evaluation> searchEvaluationById(Long id);
+
+    public List<Evaluation> searchEvaluationByPatientId(Long id);
+
     public List<Evaluation> listEvaluations();
+
     public Evaluation editEvaluation(Long id, EvaluationDTO evaluationDTO);
+
     public Evaluation createEvaluationFromSensor(String readings);
+
     public byte[] generateCsv() throws IOException;
 }

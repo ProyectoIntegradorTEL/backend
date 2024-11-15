@@ -90,9 +90,7 @@ public class WebSecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .cors(Customizer.withDefaults())
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers("/auth/**", "/patient/**", "/evaluation/**",
-                                                                "/evaluation-types/**")
-                                                .permitAll()
+                                                .requestMatchers("/auth/**", "/evaluation/sensor").permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
