@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Controller
 @CrossOrigin
 @RequestMapping("/evaluation-types")
 public class EvaluationTypeController {

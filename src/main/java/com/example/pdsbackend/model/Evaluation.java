@@ -36,28 +36,26 @@ public class Evaluation {
     @Column(nullable = false, length = 8000)
     private String jsonData;
 
-    // Note entity isn't necessary
-    private String note;
-
     // many to one, we need that 'ONE' instance
     @ManyToOne
     private EvaluationType evaluationType;
 
     @ManyToOne
+    private Evaluator evaluator;
+
+    @ManyToOne
     private Patient patient;
 
-    public Evaluation(Long id, LocalDate date, double duration, String jsonData, String note) {
+    public Evaluation(Long id, LocalDate date, double duration, String jsonData) {
         this.id = id;
         this.date = date;
         this.duration = duration;
         this.jsonData = jsonData;
-        this.note = note;
     }
 
     public Evaluation() {}
 
     public Evaluation(Evaluation evaluation){
-        this(evaluation.getId(), evaluation.getDate(), evaluation.getDuration(), evaluation.getJsonData(),
-                evaluation.getNote());
+        this(evaluation.getId(), evaluation.getDate(), evaluation.getDuration(), evaluation.getJsonData());
     }
 }
