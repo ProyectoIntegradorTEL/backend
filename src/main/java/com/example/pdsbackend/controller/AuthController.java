@@ -4,10 +4,11 @@ import com.example.pdsbackend.DTO.UserDTO;
 import com.example.pdsbackend.config.JwtTokenUtil;
 import com.example.pdsbackend.model.JwtRequest;
 import com.example.pdsbackend.model.JwtResponse;
+import com.example.pdsbackend.model.User;
 import com.example.pdsbackend.service.IUserService;
-//DESCOMENTAR import com.example.pdsbackend.service.JwtUserDetailsService;
 import com.example.pdsbackend.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,13 +35,13 @@ public class AuthController {
 
     // cuerpo de la solicitud como un objeto JSON
     @PostMapping("/register")
-    public String register(@RequestBody UserDTO user) {
+    public ResponseEntity<User> register(@RequestBody UserDTO user) {
         try {
-            userService.createUser(user);
+            User createdUser = userService.createUser(user);
 
-            return "User successfully registered";
+            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (Exception e) {
-            return "User could not be registered";
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
