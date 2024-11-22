@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                     CorsConfigurationSource source = request -> {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowCredentials(true);
-                        config.addAllowedOriginPattern("*"); // Permitir todos los orígenes
+                        config.addAllowedOriginPattern("*"); 
                         config.addAllowedHeader("*");
                         config.addAllowedMethod("*");
                         return config;

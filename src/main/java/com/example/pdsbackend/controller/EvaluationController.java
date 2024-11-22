@@ -53,6 +53,11 @@ public class EvaluationController {
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("Test", HttpStatus.OK);
+    }
+
 
 
     @PostMapping("/preview")
