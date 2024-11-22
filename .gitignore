@@ -1,10 +1,17 @@
+# Ignorar el archivo de ayuda generado por Spring Initializr
 HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### STS ###
+# Ignorar la carpeta target y todo su contenido
+target/
+
+# Permitir el wrapper de Maven
+!.mvn/wrapper/maven-wrapper.jar
+
+# Excluir las carpetas target específicas dentro de src/main y src/test
+!src/main/**/target/
+!src/test/**/target/
+
+### Spring Tool Suite (STS) ###
 .apt_generated
 .classpath
 .factorypath
@@ -14,7 +21,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -25,9 +32,11 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# Ignorar carpetas build generadas fuera de src/main y src/test
+build/
+!src/main/**/build/
+!src/test/**/build/
+
+### Visual Studio Code ###
 .vscode/
