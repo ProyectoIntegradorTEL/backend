@@ -13,6 +13,6 @@ services:
       - '6002'
     volumes:
       - my-db3:/var/lib/postgresql/data
-
+    
 volumes:
   my-db3:
