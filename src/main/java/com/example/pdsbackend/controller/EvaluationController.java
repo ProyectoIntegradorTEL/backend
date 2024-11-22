@@ -1,20 +1,32 @@
 package com.example.pdsbackend.controller;
 
-import com.example.pdsbackend.DTO.EvaluationDTO;
-import com.example.pdsbackend.model.Evaluation;
-import com.example.pdsbackend.service.IEvaluationService;
-import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import com.example.pdsbackend.DTO.EvaluationDTO;
+import com.example.pdsbackend.model.Evaluation;
+import com.example.pdsbackend.service.IEvaluationService;
+
+import jakarta.persistence.EntityNotFoundException;
+
+
 
 @RestController
 @Controller
@@ -24,15 +36,41 @@ public class EvaluationController {
     private final IEvaluationService evaluationService;
 
     @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
     public EvaluationController(IEvaluationService evaluationService) {
         this.evaluationService = evaluationService;
     }
+
+
+    @Autowired
+    private SimpUserRegistry simpUserRegistry;
 
     @PostMapping
     public ResponseEntity<Evaluation> createEvaluation(@RequestBody EvaluationDTO evaluationDTO) {
         Evaluation createdEvaluation = evaluationService.createEvaluation(evaluationDTO);
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
     }
+
+
+
+    @PostMapping("/preview")
+    public  ResponseEntity<String>  setEvaluationPreview(@RequestBody String readings) {
+        
+        try {
+
+            System.out.println(readings);
+            simpMessagingTemplate.convertAndSend("/dataTopic", readings);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    
 
     @PostMapping("/sensor")
     public ResponseEntity<Evaluation> createEvaluationFromSensor(@RequestBody String readings) {
