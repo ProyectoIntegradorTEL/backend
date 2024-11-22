@@ -1,5 +1,6 @@
 package com.example.pdsbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Note {
     private Patient patient;
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @JsonIgnore
     private Evaluation evaluation;
 
     public Note(Long id, String comment) {

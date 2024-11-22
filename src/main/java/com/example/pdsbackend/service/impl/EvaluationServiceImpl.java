@@ -140,7 +140,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
     @Override
     public List<Evaluation> listEvaluations() {
-        return evaluationRepository.findAll();
+        return evaluationRepository.findAllWithNotes();
     }
 
     @Override
