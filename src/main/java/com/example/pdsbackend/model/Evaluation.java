@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Entity(name = "Evaluation")
@@ -49,6 +50,9 @@ public class Evaluation {
 
     @ManyToOne
     private Patient patient;
+
+    @OneToMany(mappedBy = "evaluation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Note> notes;
 
     public Evaluation(Long id, LocalDate date, double duration, String jsonData) {
         this.id = id;
