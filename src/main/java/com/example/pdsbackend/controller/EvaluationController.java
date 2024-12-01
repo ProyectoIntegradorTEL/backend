@@ -3,10 +3,10 @@ package com.example.pdsbackend.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,8 @@ import com.example.pdsbackend.model.Evaluation;
 import com.example.pdsbackend.service.IEvaluationService;
 
 import jakarta.persistence.EntityNotFoundException;
-
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 
 @RestController
@@ -127,6 +128,49 @@ public class EvaluationController {
         System.out.println("Searching evaluation by patient id: " + patientId);
         List<Evaluation> evaluations = evaluationService.searchEvaluationByPatientId(patientId);
         return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/analyze")
+    public ResponseEntity<?> analyzeEvaluation(@PathVariable Long id) {
+        try {
+            var evaluation = evaluationService.searchEvaluationById(id);
+            if (evaluation.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Parse el JSON original
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(evaluation.get().getJsonData());
+
+            // Extraer solo los datos de readings
+            JsonNode readingsNode = rootNode.get("readings");
+            if (readingsNode == null) {
+                return ResponseEntity.badRequest().body("Invalid data format: missing readings");
+            }
+
+            // Crear el nuevo formato
+            String formattedData = mapper.writeValueAsString(readingsNode);
+
+            // Crear la petición HTTP
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> request = new HttpEntity<>(formattedData, headers);
+
+            // Hacer la petición a FastAPI
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    "http://localhost:8000/analyze_signal",
+                    request,
+                    String.class
+            );
+
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error in analysis: " + e.getMessage());
+        }
     }
 
     @GetMapping
