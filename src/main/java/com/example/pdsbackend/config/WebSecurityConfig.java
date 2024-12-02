@@ -62,9 +62,12 @@ public class WebSecurityConfig {
                     "/auth/**",
                     "/evaluation/sensor",
                     "/evaluation/preview",
-                    "/patient/**",
+                    "/evaluation/**",
+                    "/patient/**",  
                     "/ws-connect-js/**",
-                    "/ws-connect/**"
+                    "/ws-connect/**",
+                    "/evaluation",
+                    "/evaluation-types/**"
                 ).permitAll()
                 .anyRequest().authenticated())
                 .sessionManagement(session -> session

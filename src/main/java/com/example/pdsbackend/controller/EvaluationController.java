@@ -49,8 +49,18 @@ public class EvaluationController {
 
     @PostMapping
     public ResponseEntity<Evaluation> createEvaluation(@RequestBody EvaluationDTO evaluationDTO) {
-        Evaluation createdEvaluation = evaluationService.createEvaluation(evaluationDTO);
-        return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
+
+
+        try{
+
+            Evaluation createdEvaluation = evaluationService.createEvaluation(evaluationDTO);
+            return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+     
     }
 
     @GetMapping("/test")
