@@ -8,6 +8,7 @@ import com.example.pdsbackend.model.User;
 import com.example.pdsbackend.service.IUserService;
 import com.example.pdsbackend.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -55,7 +56,9 @@ public class AuthController {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        String role = userService.searchUserByUsername(authenticationRequest.getUsername()).get().getRole();
+
+        return ResponseEntity.ok(new JwtResponse(token, role));
     }
 
     private void authenticate(String username, String password) throws Exception {

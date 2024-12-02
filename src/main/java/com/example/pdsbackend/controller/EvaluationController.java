@@ -1,20 +1,33 @@
 package com.example.pdsbackend.controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.pdsbackend.DTO.EvaluationDTO;
 import com.example.pdsbackend.model.Evaluation;
 import com.example.pdsbackend.service.IEvaluationService;
-import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+
 
 @RestController
 @Controller
@@ -24,15 +37,46 @@ public class EvaluationController {
     private final IEvaluationService evaluationService;
 
     @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
     public EvaluationController(IEvaluationService evaluationService) {
         this.evaluationService = evaluationService;
     }
+
+
+    @Autowired
+    private SimpUserRegistry simpUserRegistry;
 
     @PostMapping
     public ResponseEntity<Evaluation> createEvaluation(@RequestBody EvaluationDTO evaluationDTO) {
         Evaluation createdEvaluation = evaluationService.createEvaluation(evaluationDTO);
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("Test", HttpStatus.OK);
+    }
+
+
+
+    @PostMapping("/preview")
+    public  ResponseEntity<String>  setEvaluationPreview(@RequestBody String readings) {
+        
+        try {
+
+            System.out.println(readings);
+            simpMessagingTemplate.convertAndSend("/dataTopic", readings);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    
 
     @PostMapping("/sensor")
     public ResponseEntity<Evaluation> createEvaluationFromSensor(@RequestBody String readings) {
@@ -84,6 +128,49 @@ public class EvaluationController {
         System.out.println("Searching evaluation by patient id: " + patientId);
         List<Evaluation> evaluations = evaluationService.searchEvaluationByPatientId(patientId);
         return new ResponseEntity<>(evaluations, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/analyze")
+    public ResponseEntity<?> analyzeEvaluation(@PathVariable Long id) {
+        try {
+            var evaluation = evaluationService.searchEvaluationById(id);
+            if (evaluation.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Parse el JSON original
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(evaluation.get().getJsonData());
+
+            // Extraer solo los datos de readings
+            JsonNode readingsNode = rootNode.get("readings");
+            if (readingsNode == null) {
+                return ResponseEntity.badRequest().body("Invalid data format: missing readings");
+            }
+
+            // Crear el nuevo formato
+            String formattedData = mapper.writeValueAsString(readingsNode);
+
+            // Crear la petición HTTP
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> request = new HttpEntity<>(formattedData, headers);
+
+            // Hacer la petición a FastAPI
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    "http://localhost:8000/analyze_signal",
+                    request,
+                    String.class
+            );
+
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error in analysis: " + e.getMessage());
+        }
     }
 
     @GetMapping

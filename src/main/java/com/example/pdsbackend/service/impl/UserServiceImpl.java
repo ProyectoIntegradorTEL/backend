@@ -38,6 +38,7 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setCreatedAt(LocalDateTime.now()); // creation date
+        user.setRole(userDTO.getRole());
 
         return userRepository.save(user);
     }
@@ -51,6 +52,9 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> searchUserById(Long id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public Optional<User> searchUserByUsername(String username) { return userRepository.findByUsername(username); }
 
     @Override
     public List<User> listUsers() {

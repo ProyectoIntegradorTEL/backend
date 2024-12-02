@@ -12,4 +12,5 @@ public interface IUserService {
     public Optional<User> searchUserById(Long id);
     public List<User> listUsers();
     public User editUser(Long id, UserDTO user);
+    public Optional<User> searchUserByUsername(String username);
 }
